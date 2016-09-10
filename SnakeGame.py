@@ -69,6 +69,9 @@ class Game:
                     self.key = preKey
                     continue
             else:
+                event = win.getch()
+                if event == 27:
+                    break
                 self.key = self.ai.getAction(self.food, self.snake)
 
             if self.key not in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, 27]:  # if an invalid key is pressed
@@ -105,11 +108,11 @@ class Game:
                 if last is not None:
                     win.addch(last[0], last[1], ' ')
                 win.addch(self.snake[0][0], self.snake[0][1], '#')
-        curses.endwin()
+        # curses.endwin()
         print("Score: {0}\n".format(self.score))
         return self.score
 
-            
+from snake_ai import SnakeAI
 if __name__ == "__main__":
-    game = Game()
+    game = Game(ai=SnakeAI, is_human=False, start_pause=0.03)
     game.run()

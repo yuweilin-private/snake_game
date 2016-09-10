@@ -2,6 +2,8 @@
 # Updated: 2016/09/07
 
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
+import random
+import time
 
 class SnakeAI:
     def __init__(self, win_size=(20,60)):
@@ -36,7 +38,8 @@ class SnakeAI:
                     and next_point[0]!=0 and next_point[0]!=self.win_size[0]-1 \
                     and next_point[1]!=0 and next_point[1]!=self.win_size[1]-1:
                     for p in toFood([next_point]+snake[:-1]):
-                        yield [next_point] + p
+                        if p is not None:
+                            yield [next_point] + p
             # return None if all paths are explored
             yield None
 
@@ -46,13 +49,25 @@ class SnakeAI:
             return True
 
         if len(self.path) == 0:
+            timeout = time.time() + 0.002
             for path in toFood(snake):
+                if time.time() > timeout:
+                    break
+                if path is None:
+                    continue
                 if isClean((path+snake)[:len(snake)]):
                     self.path = path[::-1]
                     break
+        time.sleep(0.0001)
+        if len(self.path) == 0:
+            return random.choice([a for a in actions if a!=action(snake[1], snake[0])])
+        
         return action(self.path.pop(), snake[0])
 
 if __name__ == "__main__":
     ai = SnakeAI()
+    print ai.getAction((10,20), [(4,10), (4,9), (4,8)])
+    print ai.path
+    print ai.getAction((10,20), [(4,10), (4,9), (4,8)])
     print ai.getAction((10,20), [(4,10), (4,9), (4,8)])
     print ai.path
