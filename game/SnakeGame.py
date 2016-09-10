@@ -90,16 +90,16 @@ class Game:
         while True:
             # action
             event = win.getch()
+            if event == END_KEY:
+                break
             if ai:
-                action = ai.getAction(self.state)
+                self.action = ai.getAction(self.state)
             else:
                 # pause
                 if event == PAUSE_KEY:
                     event = -1
                     while event != PAUSE_KEY:
                         event = win.getch()
-                if event == END_KEY:
-                    break
                 self.action = event if event in ACTIONS else self.action # if an invalid key is pressed
 
             # delete the old snake and food
